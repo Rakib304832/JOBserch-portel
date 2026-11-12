@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     avatarUrl: "",
     suspended: false,
     createdAt: nowIso(),
-    plan: "free", // every new account starts on the free tier
+    plan: "free" as const, // every new account starts on the free tier
   };
   createUser(user);
 

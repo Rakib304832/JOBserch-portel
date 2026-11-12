@@ -84,7 +84,11 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-6 text-xs text-zinc-500">
-          © {new Date().getFullYear()} HireLoop. All rights reserved.
+          {/* The year is written statically on purpose: Next's Cache Components
+              mode refuses `new Date()` while prerendering (the value would
+              change between renders). Update it at New Year — or compute it
+              in a small client component if you want it automatic. */}
+          © 2026 HireLoop. All rights reserved.
         </div>
       </div>
     </footer>

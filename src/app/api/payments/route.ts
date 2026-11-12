@@ -41,6 +41,7 @@ import {
 } from "@/lib/store";
 import { getRecruiterPlan, getSeekerPlan } from "@/lib/plans";
 import { updateCompany } from "@/lib/store";
+import type { RecruiterPlanId, SeekerPlanId } from "@/lib/types";
 import type { PaymentsResponse } from "@/lib/api-types";
 
 /* -------------------------------------------------------------------------- */
@@ -144,7 +145,8 @@ export async function POST(req: NextRequest) {
       createdAt: nowIso(),
     };
     addPayment(payment);
-    updateUser(user.id, { plan: plan.id }); // ← activate the plan
+    // `as SeekerPlanId` narrows the generic string to the union type.
+    updateUser(user.id, { plan: plan.id as SeekerPlanId }); // ← activate the plan
     sendEmail(
       user.email,
       `Your ${plan.label} plan is active`,
@@ -175,7 +177,7 @@ export async function POST(req: NextRequest) {
     createdAt: nowIso(),
   };
   addPayment(payment);
-  updateCompany(company.id, { plan: plan.id }); // ← raises the job-post limit
+  updateCompany(company.id, { plan: plan.id as RecruiterPlanId }); // ← raises the job-post limit
   sendEmail(
     user.email,
     `Your ${plan.label} plan is active`,

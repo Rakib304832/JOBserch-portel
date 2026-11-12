@@ -145,9 +145,9 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
 /*  Ready-made JSON error responses                                           */
 /* -------------------------------------------------------------------------- */
 
-/** 401 = "not logged in". */
-export function unauthorized() {
-  return Response.json({ error: "You must be logged in." }, { status: 401 });
+/** 401 = "not logged in" (or "wrong credentials" when a message is given). */
+export function unauthorized(msg = "You must be logged in.") {
+  return Response.json({ error: msg }, { status: 401 });
 }
 
 /** 403 = "logged in, but not allowed" (wrong role, not the owner…). */

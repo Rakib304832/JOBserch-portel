@@ -7,11 +7,16 @@
  */
 
 import { type NextRequest } from "next/server";
+import { getCurrentUser } from "@/lib/session";
 import { countUsersByRole, listCompanies, listJobs } from "@/lib/store";
 import type { PublicStats } from "@/lib/api-types";
 
-export async function GET(_req: NextRequest) {
-  void _req; // no session needed; param kept for a consistent handler shape
+export async function GET(req: NextRequest) {
+  // Reading the session (even though the result is unused) touches the
+  // request object, which tells Next.js this route must be evaluated at
+  // REQUEST time — otherwise it would be prerendered once at build time and
+  // the "live" stats would freeze.
+  await getCurrentUser(req);
 
   const stats: PublicStats["stats"] = [
     {
