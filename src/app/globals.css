@@ -49,12 +49,15 @@
 }
 
 :root {
+  /* Brand hue shifted to indigo-violet to match the HireLoop gradient
+     (from-indigo-500 to-violet-500) used on buttons and links. */
+  --primary: oklch(0.55 0.22 275);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.6 0.2 275);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -84,14 +87,17 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* Slightly deeper, blue-tinted darks that blend with the hardcoded
+     #17181c surfaces used by the navbar and hero. */
+  --background: oklch(0.155 0.006 265);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.2 0.007 265);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: oklch(0.2 0.007 265);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* Brand hue matches the indigo→violet button gradient. */
+  --primary: oklch(0.55 0.22 275);
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -101,13 +107,16 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
+  --ring: oklch(0.65 0.2 275);
+  /* Chart palette for Recharts: one color per data series across all
+     dashboards (pie slices, bars, lines). */
+  --chart-1: oklch(0.62 0.19 275); /* indigo   */
+  --chart-2: oklch(0.65 0.17 305); /* violet   */
+  --chart-3: oklch(0.7 0.15 200);  /* sky      */
+  --chart-4: oklch(0.72 0.17 340); /* pink     */
+  --chart-5: oklch(0.75 0.14 160); /* emerald  */
+  /* Sidebar tokens — the dashboard sidebar background/card shades. */
+  --sidebar: oklch(0.175 0.007 265);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);

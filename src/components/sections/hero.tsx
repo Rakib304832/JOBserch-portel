@@ -3,12 +3,18 @@ import Link from "next/link";
 // Symlink-free imports keep hero.css-free color values in sync with the Figma "dark" theme;
 // the exact hexes match the navbar's dark surface so header and hero read as one continuous block.
 
+/** Shape of one stat in the strip: a big number and a label under it. */
+export interface HeroStat {
+  value: string;
+  label: string;
+}
+
 /**
  * Live stats strip shown under the hero copy.
  * Kept as a plain array (instead of hard-coding markup 4x) so adding/removing a stat
  * only changes data, not layout. Values are static placeholders until real APIs exist.
  */
-const heroStats = [
+const fallbackStats: HeroStat[] = [
   { value: "12,000+", label: "Active Jobs" },
   { value: "3,500+", label: "Companies" },
   { value: "50,000+", label: "Job Seekers" },
@@ -19,8 +25,13 @@ const heroStats = [
  * Hero section — the top landing block of the home page.
  * It is a Server Component on purpose: it has no interactivity, so nothing
  * prevents it from server-rendering (smaller JS bundle, better SEO for the headline).
+ *
+ * `stats` is OPTIONAL: the home page passes REAL numbers fetched from
+ * /api/stats/public ("live stats" per the requirements); when the hero is
+ * previewed without data it falls back to the static array above.
  */
-export function Hero() {
+export function Hero({ stats }: { stats?: HeroStat[] }) {
+  const heroStats = stats ?? fallbackStats;
   return (
     // `relative` anchors the absolutely-positioned globe image to this section;
     // `overflow-hidden` keeps the oversized image from creating horizontal scrollbars.
