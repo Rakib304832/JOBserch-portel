@@ -9,12 +9,22 @@
  * LAYOUTS: public pages get navbar+footer, dashboard pages get a sidebar
  * instead, without duplicating anything.
  *
+ * WHICH PAGES LIVE IN THIS GROUP
+ *   /                     → page.tsx (landing)
+ *   /jobs                 → jobs/page.tsx
+ *   /jobs/[jobId]         → jobs/[jobId]/page.tsx
+ *   /companies            → companies/page.tsx
+ *   /companies/[companyId]→ companies/[companyId]/page.tsx
+ *   /pricing              → pricing/page.tsx
+ *   /checkout             → checkout/page.tsx
+ *   /checkout/success     → checkout/success/page.tsx
+ *
  * This layout is a Server Component: it renders no interactivity itself
  * (Navbar is its own client component), so it ships no JavaScript of its own.
  */
 
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export default function PublicLayout({
   children,

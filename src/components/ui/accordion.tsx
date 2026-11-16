@@ -1,64 +1,104 @@
 "use client";
 
 /**
- * accordion.tsx — the expanding/collapsing FAQ rows on the Pricing page.
+ * ============================================================================
+ * components/ui/Accordion.tsx — accessible FAQ accordion
+ * ============================================================================
  *
- * Only one row can be open at a time: `openIndex` state lives in the parent,
- * clicking a row sets it (or closes it by setting it to null).
+ * WHICH PAGE USES IT
+ * /pricing has an FAQ section covering cancellation, refunds, payment methods
+ * and plan switching (requirements doc). This is the one interactive piece.
+ *
+ * WHY "use client"
+ * Opening/closing needs React state. Anything with state must be a Client
+ * Component in the App Router, otherwise it cannot respond to clicks.
+ *
+ * WHY A SINGLE-OPEN ACCORDION
+ * One answer visible at a time keeps a long FAQ short on mobile. Clicking the
+ * open item again closes it (toggle behaviour).
+ * ============================================================================
  */
 
-import { useState } from "react";
-import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface FaqItem {
-  question: string;
-  answer: string;
+/** One row's data: the question and the answer it reveals. */
+export interface AccordionItem {
+  question: string; // the always-visible row
+  answer: string; // revealed when the row is open
 }
 
-export function Accordion({ items }: { items: FaqItem[] }) {
-  // Which row is open. null = all closed (the initial state).
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+/**
+ * The accordion.
+ * `items` comes from lib/data.ts (`faqs`), so the copy is not hard-coded here.
+ */
+export function Accordion({ items }: { items: AccordionItem[] }) {
+  // Which row is open right now. null = all closed.
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
-    <div className="divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10">
+    // divide-y draws one hairline between rows — cleaner than border on each.
+    <div className="divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/[0.02]">
       {items.map((item, index) => {
+        // Is THIS row the open one?
         const isOpen = openIndex === index;
+
         return (
-          <div key={item.question}>
-            {/* The clickable question row — a real <button> for keyboard users. */}
+          <div key={item.question} className="px-5 sm:px-6">
+            {/* ---- The clickable question row ---- */}
             <button
               type="button"
+              // Clicking the open row closes it; clicking another opens that one.
               onClick={() => setOpenIndex(isOpen ? null : index)}
-              aria-expanded={isOpen} // tells screen readers "this expands"
-              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-medium text-zinc-200 transition-colors hover:bg-white/5"
+              // aria-expanded tells screen readers whether the panel is open.
+              aria-expanded={isOpen}
+              // aria-controls links the button to the panel it toggles.
+              aria-controls={`faq-panel-${index}`}
+              className="flex w-full items-center justify-between gap-4 py-5 text-left"
             >
-              {item.question}
-              {/* Chevron rotates 180° when open — a classic micro-animation. */}
-              <ChevronDownIcon
-                className={cn(
-                  "h-4 w-4 shrink-0 text-zinc-400 transition-transform duration-200",
-                  isOpen && "rotate-180"
-                )}
+              {/* The question itself */}
+              <span className="text-sm font-medium text-zinc-100 sm:text-base">
+                {item.question}
+              </span>
+
+              {/* Chevron rotates 180° while open — a tiny state cue. */}
+              <ChevronDown
                 aria-hidden="true"
+                className={cn(
+                  "h-5 w-5 shrink-0 text-zinc-500 transition-transform duration-200",
+                  isOpen && "rotate-180 text-indigo-300"
+                )}
               />
             </button>
 
-            {/* The answer. `grid-template-rows: 0fr → 1fr` animates height
-                from zero to auto — a modern CSS trick that avoids measuring
-                scrollHeight in JavaScript. */}
-            <div
-              className={cn(
-                "grid transition-all duration-300 ease-out",
-                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            {/* ---- The answer panel ---- */}
+            {/* AnimatePresence keeps the element mounted long enough to animate out. */}
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  // id pairs with aria-controls above.
+                  id={`faq-panel-${index}`}
+                  // role="region" + aria-labelledby makes it a landmark for AT.
+                  role="region"
+                  aria-labelledby={`faq-question-${index}`}
+                  // Height animation: 0 → auto on enter, auto → 0 on exit.
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  // 200ms feels instant without being jarring.
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  // overflow-hidden clips the text while the height changes.
+                  className="overflow-hidden"
+                >
+                  {/* Bottom padding lives inside so it collapses with the panel. */}
+                  <p className="pb-5 text-sm leading-relaxed text-zinc-400">
+                    {item.answer}
+                  </p>
+                </motion.div>
               )}
-            >
-              <div className="overflow-hidden">
-                <p className="px-5 pb-4 text-sm leading-relaxed text-zinc-400">
-                  {item.answer}
-                </p>
-              </div>
-            </div>
+            </AnimatePresence>
           </div>
         );
       })}
