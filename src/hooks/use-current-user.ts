@@ -94,6 +94,9 @@ function ensureLoaded(): void {
     inflight = null;
     // …and re-render every subscribed component.
     for (const listener of listeners) listener();
+    // Return the result so `inflight` stays a Promise<CurrentUser | null>
+    // (without this the callback returns void and TypeScript rejects it).
+    return result;
   });
 }
 

@@ -46,6 +46,33 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ------------------------------------------------------------------
+     Seeker dashboard palette — src/app/(secker)
+     ------------------------------------------------------------------
+     WHY THESE EXTRA NAMES:
+     The private dashboard was written with a few named surface colours
+     instead of repeating hex codes in every card. Each token below turns
+     into normal Tailwind utilities, so the dashboard can write
+     `bg-panel`, `border-line`, `text-brand-orange` and stay readable.
+
+     These are ONLY used by the dashboard (the public pages use the
+     shadcn tokens above), so adding them here cannot change the public
+     design.
+
+       ink       -> page background (darkest)
+       panel     -> cards / sidebar
+       elevated  -> inputs, hover rows, secondary chips
+       line      -> every 1px border
+       brand-*   -> the HireLoop logo / button colours
+     ------------------------------------------------------------------ */
+  --color-ink: #09090b;
+  --color-panel: #101013;
+  --color-elevated: #15151a;
+  --color-line: #23232b;
+  --color-brand-blue: #3b82f6;
+  --color-brand-orange: #f97316;
+  --color-brand-violet: #7c5cff;
 }
 
 :root {
